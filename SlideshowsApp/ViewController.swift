@@ -14,6 +14,8 @@ class ViewController: UIViewController {
     var timer_sec: Int = 0
     //タイマー用の時間のための変数
     var timer: Timer!
+    //カウンター
+    var count :Int = 0
     //写真の配列
     let imageBox = ["cat1.jpg", "cat2.jpg", "cat3.jpg"]
     
@@ -42,8 +44,7 @@ class ViewController: UIViewController {
         //segueから遷移先のResultViewControllerを取得する
         let resultViewController:ResultViewController = segue.destination as! ResultViewController
         //遷移先のresultViewControllerで宣言されているreceiveImageに値を渡す
-        let selectPictureNumber = self.timer_sec % imageBox.count
-        resultViewController.receiveImage = imageBox[selectPictureNumber]
+        resultViewController.receiveImage = imageBox[count]
     }
     
     //画像のタップ
@@ -58,24 +59,22 @@ class ViewController: UIViewController {
     
     //進むボタン
     @IBAction func goButton(_ sender: Any) {
-        self.timer_sec += 2
-        //imageBox.count枚のためimageBox.count*2秒でタイマーリセット
-        if timer_sec >= imageBox.count * 2 {
-            timer_sec = 0
+        count += 1
+        //imageBox.count枚のためimageBox.count+1でカウンターリセット
+        if count >= imageBox.count {
+            count = 0
         }
-        let selectPictureNumber = self.timer_sec % imageBox.count
-        imageView.image = UIImage(named: imageBox[selectPictureNumber])
+        imageView.image = UIImage(named: imageBox[count])
     }
     
     //戻るボタン
     @IBAction func backButton(_ sender: Any) {
-        self.timer_sec -= 2
+        count -= 1
         //0以下にはしない
-        if timer_sec <= 0 {
-            timer_sec = imageBox.count * 2
+        if count < 0 {
+            count = imageBox.count - 1
         }
-        let selectPictureNumber = self.timer_sec % imageBox.count
-        imageView.image = UIImage(named: imageBox[selectPictureNumber])
+        imageView.image = UIImage(named: imageBox[count])
     }
     
     //再生・停止ボタン
@@ -113,12 +112,14 @@ class ViewController: UIViewController {
     @objc func updateTimer(_ timer: Timer) {
         self.timer_sec += 2
         //スライドショーを進める
-        let selectPictureNumber = self.timer_sec % imageBox.count
-        imageView.image = UIImage(named: imageBox[selectPictureNumber])
-        //imageBox.count枚のためimageBox.count*2秒でタイマーリセット
-        if timer_sec >= imageBox.count * 2 {
-            timer_sec = 0
+        count += 1
+        //imageBox.count枚のためimageBox.countになったらカウンターリセット
+        if count >= imageBox.count {
+            count = 0
         }
+        //写真の表示
+        imageView.image = UIImage(named: imageBox[count])
+        
     }
 }
 
